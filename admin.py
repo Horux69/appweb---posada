@@ -27,3 +27,8 @@ class Administrador:
         sql = f"INSERT INTO operadores (id, nombres, apellidos, cedula, correo, celular, rol, clave, estado, fecha_registro, user_registro) VALUES (NULL,'{operador[0]}','{operador[1]}','{operador[2]}','{operador[3]}','{operador[4]}','{operador[5]}','{operador[6]}','{operador[7]}', '{fecha_actual}', '{user_registro}')"
         self.cursor.execute(sql)
         self.conexion.commit()
+
+    def desactivarAdmin(self, id):
+        sql = f"UPDATE `operadores` SET `estado`='inactivo' WHERE `id` = '{id}'"
+        self.cursor.execute(sql)
+        self.conexion.commit()

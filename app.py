@@ -7,6 +7,7 @@ import os
 import hashlib
 from admin import Administrador
 from validaLoginAdmin import ValidationLoginAdmin
+from categorias import Categorias
 
 
 app = Flask(__name__)
@@ -14,10 +15,14 @@ app.secret_key = "digitalforge"
 
 mysql = MySQL()
 
-app.config['MYSQL_DATABASE_HOST']='10.206.66.185'
+""" app.config['MYSQL_DATABASE_HOST']='10.206.66.185'
 app.config['MYSQL_DATABASE_USER']='backend_2'
 app.config['MYSQL_DATABASE_PASSWORD']='@Andres4321'
-app.config['MYSQL_DATABASE_DB']='visitabuga'
+app.config['MYSQL_DATABASE_DB']='visitabuga' """
+app.config['MYSQL_DATABASE_HOST']='localhost'
+app.config['MYSQL_DATABASE_USER']='root'
+app.config['MYSQL_DATABASE_PASSWORD']=''
+app.config['MYSQL_DATABASE_DB']='vistabuga3.0'
 mysql.init_app(app)
 
 conexion = mysql.connect()
@@ -25,11 +30,17 @@ cursor = conexion.cursor()
 
 losOperadores = Administrador(mysql)
 validaLoginAdmin = ValidationLoginAdmin(mysql)
+lasCategorias = Categorias(mysql)
 
 
-@app.route('/')
+@app.route('/') # QUITAR EL CONTROL DE SESION CUANDO YA ESTE LISTA LA PARTE DE TURISTAS 
 def admin_index():
-    return render_template('admin/login.html')
+    if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad':
+        return render_template('admin/index.html')
+    else:
+        return render_template("admin/login.html")
+    
+    #############################################
 
 @app.route('/admin/login')
 def adminLogin():
@@ -37,37 +48,51 @@ def adminLogin():
 
 @app.route('/admin/verAdmin')
 def verAdmin():
+    if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad': 
+        resultados = losOperadores.consultarAdmin()
 
-    resultados = losOperadores.consultarAdmin()
-
-    return render_template("admin/verAdmin.html", admins = resultados)
+        return render_template("admin/verAdmin.html", admins = resultados)
+    else:
+        return render_template("admin/login.html")
 
 @app.route('/admin/agregar', methods = ['POST'])
 def agregarAdmin():
-    nombre = request.form['txtNombre']
-    apellido = request.form['txtApellido']
-    cedula = request.form['txtCedula']
-    correo = request.form['txtCorreo']
-    celular = request.form['txtCelular']
-    contrasena = request.form['txtPassword']
+    if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad':
 
-    cifrada = hashlib.sha512(contrasena.encode("utf-8")).hexdigest()
+        nombre = request.form['txtNombre']
+        apellido = request.form['txtApellido']
+        cedula = request.form['txtCedula']
+        correo = request.form['txtCorreo']
+        celular = request.form['txtCelular']
+        contrasena = request.form['txtPassword']
 
-    rol = 'ad'
+        cifrada = hashlib.sha512(contrasena.encode("utf-8")).hexdigest()
 
-    estado = 'activo'
+        rol = 'ad'
 
-    if not losOperadores.buscarAdmin(correo, cedula):
+        estado = 'activo'
 
-        user_registro = "usuario_que_realiza_el_registro"
+        if not losOperadores.buscarAdmin(correo, cedula):
 
-        losOperadores.agregarAdmin([nombre, apellido, cedula, correo, celular, rol, cifrada, estado], user_registro)
-    
-    else: 
+            losOperadores.agregarAdmin([nombre, apellido, cedula, correo, celular, rol, cifrada, estado], session['user_name'])
+        
+        else: 
 
-        return render_template('admin/verAdmin.html' , men = "Correo o cedula no disponible")
+            return render_template('admin/verAdmin.html' , men = "Correo o cedula no disponible")
 
-    return redirect('/admin/verAdmin')
+        return redirect('/admin/verAdmin')
+    else:
+        return render_template("admin/login.html")
+
+@app.route('/admin/desactivar/<id>')
+def desactivarAdmin(id):
+        if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad':
+
+            losOperadores.desactivarAdmin(id)
+            return redirect('/admin/verAdmin')
+        
+        else:
+            return render_template("admin/login.html")
 
 @app.route('/admin/validationLogin', methods = ['POST'])
 def adminValidationLogin():
@@ -79,17 +104,49 @@ def adminValidationLogin():
 
         resultados = validaLoginAdmin.validaLogin(correo, encriptada)
 
-        print(resultados)
-
         if len(resultados) > 0:
-            if resultados[0][1]:
+            if encriptada == resultados[0][2]:
                 session["logueado"] = True
-                session["user_name"] = resultados[0][1]
+                session["user_name"] = resultados[0][0]
+                session["rol"] = resultados[0][3]
 
-                return render_template("admin/index.html")
+                if session["rol"] == 'ad':
+                    return render_template("admin/index.html")
+                elif session["rol"] == 'su':
+                    return render_template("admin/index.html")
+                else:
+                    return render_template("admin/login.html", mensaje = "Acesso denegado")
 
         else:
-                return render_template('admin/login.html', mensaje = "Acesso denegado")
+            return render_template('admin/login.html', mensaje = "Acesso denegado")
+        
+@app.route('/admin/cerrar')
+def adminLoginCerrar():
+    session.clear()
+    return redirect('/admin/login')
+        
+@app.route('/admin/categorias')
+def admincateg():
+    if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad':
+
+        resultado_categorias = lasCategorias.consulta_categorias()
+        
+        return render_template('admin/categorias.html', admin_cate = resultado_categorias)
+    else:
+        return render_template("admin/login.html")
+
+
+@app.route('/admin/categorias/agregar', methods= ['POST'])
+def agregarCategoria():
+    if session.get("logueado") and session.get("rol") == 'su' or session.get("rol") == 'ad':
+
+        nombre_categorias = request.form['txtCategorias']
+
+        lasCategorias.agregar_categorias([nombre_categorias], session['user_name'])
+
+        return redirect('/admin/categorias')
+    else:
+        return render_template("admin/login.html")
         
 
 

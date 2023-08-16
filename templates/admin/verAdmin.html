@@ -70,6 +70,7 @@
                             <th scope="col">Estado</th>
                             <th scope="col">Fecha de registro</th>
                             <th scope="col">Usuario que registro</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,14 +86,15 @@
                             <td>{{ resul[8] }}</td>
                             <td>{{ resul[9] }}</td>
                             <td>{{ resul[10] }}</td>
+                            <td><a class="btn btn-success" href="/admin/desactivar/{{resul[0]}}">Desactivar</a></td>                           
+                            {% if session["rol"] == 'su' %}
                             <td>
                                 <form action="" method="post">
-
                                     <input type="hidden" name="txtID" id="txtID" value="{{resul[0]}}">
                                     <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                                </form>
+                                </form>                              
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

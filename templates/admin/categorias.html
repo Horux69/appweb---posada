@@ -1,0 +1,73 @@
+{% include 'admin/header.html' %}
+
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            {% if men %}
+                <div class="alert alert-dismissible alert-danger">
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  <strong>Error al ingresar los datos!</strong> {{ men }}.
+                </div>
+                {% endif %}
+            <div class="card">
+                <div class="card-header">
+                    Datos de la categoria
+                </div>
+                <div class="card-body">
+                    <form action="/admin/categorias/agregar" method="post">
+                        <div class="mb-3">
+                          <label for="txtCategorias" class="form-label">Nombre:</label>
+                          <input type="text"
+                            class="form-control" name="txtCategorias" id="txtCategorias" aria-describedby="helpId" placeholder="Escriba el nombre de la categoria">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Fecha de registro</th>
+                            <th scope="col">usuario que lo ingreso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resul in admin_cate %}
+                        <tr class="">
+                            <td scope="row">{{ resul[0] }}</td>
+                            <td>{{ resul[1] }}</td>
+                            <td>{{ resul[2] }}</td>
+                            <td>{{ resul[3] }}</td>
+                            <td>
+                                <form action="" method="post">
+
+                                    <input type="hidden" name="txtID" id="txtID" value="{{resul[0]}}">
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                    
+                </table>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+{% include 'admin/footer.html' %}
