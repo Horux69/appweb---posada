@@ -13,8 +13,8 @@ class Administrador:
         self.conexion.commit()
         return resultado
 
-    def buscarAdmin(self, correo):
-        consultaOperador = f"SELECT * FROM operadores WHERE correo = '{correo}'"
+    def buscarAdmin(self, correo, cedula):
+        consultaOperador = f"SELECT * FROM operadores WHERE correo = '{correo}' OR cedula = '{cedula}'"
         self.cursor.execute(consultaOperador)
         resultado = self.cursor.fetchone()
         self.conexion.commit()

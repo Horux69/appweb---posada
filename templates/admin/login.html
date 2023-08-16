@@ -28,12 +28,18 @@
                   <strong>Error de inicio de sesion!</strong> {{ mensaje }}.
                 </div>
                 {% endif %} -->
+                {% if mensaje %}
+                <div class="alert alert-dismissible alert-danger">
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  <strong>Error al ingresar los datos!</strong> {{ mensaje }}.
+                </div>
+                {% endif %}
               <div class="card">
                 <div class="card-header">
                     Inicio de sesion
                 </div>
                 <div class="card-body">
-                    <form action="/admin/login" method="post">
+                    <form action="/admin/validationLogin" method="post">
                         <div class="mb-3">
                           <label for="txtCorreo" class="form-label">Correo:</label>
                           <input type="text"
