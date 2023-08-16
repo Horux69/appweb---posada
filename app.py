@@ -12,6 +12,7 @@ from categorias import Categorias
 
 app = Flask(__name__)
 app.secret_key = "digitalforge"
+# AGREGAR UN CONTROL DE TIEMPO DE LA SESION, (SOLO SI ES REQUERIDO)
 
 mysql = MySQL()
 
@@ -103,6 +104,8 @@ def adminValidationLogin():
         encriptada = hashlib.sha512(contrasena.encode("utf-8")).hexdigest()
 
         resultados = validaLoginAdmin.validaLogin(correo, encriptada)
+
+        print(resultados)
 
         if len(resultados) > 0:
             if encriptada == resultados[0][2]:
