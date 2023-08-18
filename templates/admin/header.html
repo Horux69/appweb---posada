@@ -17,8 +17,13 @@
     <nav class="navbar navbar-expand navbar-light bg-light">
         <div class="nav navbar-nav">
             <a class="nav-item nav-link active" href="/" aria-current="page">Inicio</a>
-            <a class="nav-item nav-link" href="/admin/verAdmin">Agregar Admin</a>
+            {% if session["rol"] == "su" %}
+                <a class="nav-item nav-link" href="/admin/verAdmin">Agregar Admin</a>
+            {% endif %}
             <a class="nav-item nav-link" href="/admin/categorias">Agregar Categoria</a>
+            {% if session["rol"] == "su" or session["rol"] == "ad" %}
+            <a class="nav-item nav-link" href="/admin/operadores">Agregar Operador</a>
+            {% endif %}
             <a class="nav-item nav-link" href="/admin/cerrar">Cerrar</a>
         </div>
     </nav>

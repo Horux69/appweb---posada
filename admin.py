@@ -7,7 +7,7 @@ class Administrador:
         self.cursor = self.conexion.cursor()
 
     def consultarAdmin(self):
-        sql = "SELECT * FROM operadores WHERE estado = 'activo'"
+        sql = "SELECT * FROM operadores WHERE estado = 'activo' AND rol = 'ad'"
         self.cursor.execute(sql)
         resultado = self.cursor.fetchall()
         self.conexion.commit()
@@ -16,7 +16,7 @@ class Administrador:
     def buscarAdmin(self, correo, cedula):
         consultaOperador = f"SELECT * FROM operadores WHERE correo = '{correo}' OR cedula = '{cedula}'"
         self.cursor.execute(consultaOperador)
-        resultado = self.cursor.fetchone()
+        resultado = self.cursor.fetchall()
         self.conexion.commit()
         return resultado
 

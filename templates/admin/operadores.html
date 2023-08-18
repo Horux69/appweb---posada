@@ -1,0 +1,110 @@
+{% include 'admin/header.html' %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            {% if men %}
+                <div class="alert alert-dismissible alert-danger">
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  <strong>Error al ingresar los datos!</strong> {{ men }}.
+                </div>
+                {% endif %}
+            <div class="card">
+                <div class="card-header">
+                    Datos del admin
+                </div>
+                <div class="card-body">
+                    <form action="/admin/agregar/operador" method="post">
+                        <div class="mb-3">
+                          <label for="txtNombre" class="form-label">Nombre:</label>
+                          <input type="text"
+                            class="form-control" name="txtNombre" id="txtNombre" aria-describedby="helpId" placeholder="Escriba el nombre del libro ">
+                        </div>
+                        <div class="mb-3">
+                          <label for="txtApellido" class="form-label">Apellidos:</label>
+                          <input type="text"
+                            class="form-control" name="txtApellido" id="txtApellido" aria-describedby="helpId" placeholder="Seleccione la Imagen">
+                        </div>
+                        <div class="mb-3">
+                          <label for="txtCedula" class="form-label">Cedula:</label>
+                          <input type="text"
+                            class="form-control" name="txtCedula" id="txtCedula" aria-describedby="helpId" placeholder="Celular ">
+                        </div>
+                        <div class="mb-3">
+                          <label for="txtCorreo" class="form-label">Correo:</label>
+                          <input type="email"
+                            class="form-control" name="txtCorreo" id="txtCorreo" aria-describedby="txtCorreo " placeholder="Correo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtCelular" class="form-label">Celular:</label>
+                            <input type="text"
+                              class="form-control" name="txtCelular" id="txtCelular" aria-describedby="helpId" placeholder="Celular ">
+                          </div>
+                          <div class="mb-3">
+                            <label for="txtPassword" class="form-label">Contraseña:</label>
+                            <input type="password"
+                              class="form-control" name="txtPassword" id="txtPassword" aria-describedby="helpId" placeholder="Escriba la contraseña">
+                          </div>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    Footer
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombres</th>
+                            <th scope="col">Apellidos</th>
+                            <th scope="col">Cedula</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Celular</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Fecha de registro</th>
+                            <th scope="col">Usuario que registro</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resul in operadores %}
+                        <tr class="">
+                            <td scope="row">{{ resul[0] }}</td>
+                            <td>{{ resul[1] }}</td>
+                            <td>{{ resul[2] }}</td>
+                            <td>{{ resul[3] }}</td>
+                            <td>{{ resul[4] }}</td>
+                            <td>{{ resul[5] }}</td>
+                            <td>{{ resul[6] }}</td>
+                            <td>{{ resul[8] }}</td>
+                            <td>{{ resul[9] }}</td>
+                            <td>{{ resul[10] }}</td>
+                            <td><a class="btn btn-success" href="/admin/desactivarOpe/{{resul[0]}}">Desactivar</a></td>                           
+                            {% if session["rol"] == 'su' %}
+                            <td>
+                                <form action="" method="post">
+                                    <input type="hidden" name="txtID" id="txtID" value="{{resul[0]}}">
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>                              
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+{% include 'admin/footer.html' %}
