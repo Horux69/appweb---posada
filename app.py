@@ -211,6 +211,12 @@ def desactivarOpe(id):
         
         else:
             return render_template("admin/login.html")
+        
+
+# AGREGAR SITIOS TURISTICOS
+
+""" @app.route('/admin/agregar/sitio', methods = ['POST'])
+def agregarSitioTuristicos(): """
 
 
 
