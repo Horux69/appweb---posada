@@ -32,3 +32,8 @@ class Administrador:
         sql = f"UPDATE `operadores` SET `estado`='inactivo' WHERE `id` = '{id}'"
         self.cursor.execute(sql)
         self.conexion.commit()
+
+    def eliminarAdmin(self, id):
+        sql = f"DELETE FROM operadores WHERE id = '{id}'"
+        self.cursor.execute(sql)
+        self.conexion.commit()

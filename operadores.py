@@ -32,3 +32,8 @@ class Operadores:
         sql = f"UPDATE `operadores` SET `estado`='inactivo' WHERE `id` = '{id}'"
         self.cursor.execute(sql)
         self.conexion.commit()
+
+    def eliminarOpe(self, id):
+        sql = f"DELETE FROM operadores WHERE id = '{id}'"
+        self.cursor.execute(sql)
+        self.conexion.commit()

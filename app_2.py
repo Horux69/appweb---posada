@@ -9,7 +9,6 @@ from admin import Administrador
 from validaLoginAdmin import ValidationLoginAdmin
 from categorias import Categorias
 from operadores import Operadores
-from turistas import Turistas
 
 
 app = Flask(__name__)
@@ -38,7 +37,6 @@ losOperadores = Administrador(mysql)
 validaLoginAdmin = ValidationLoginAdmin(mysql)
 lasCategorias = Categorias(mysql)
 losTrabajadores = Operadores(mysql)
-losTuristas = Turistas(mysql)
 
 
 @app.route('/') # QUITAR EL CONTROL DE SESION CUANDO YA ESTE LISTA LA PARTE DE TURISTAS 
@@ -75,6 +73,25 @@ def agregarAdmin():
         correo = request.form['txtCorreo']
         celular = request.form['txtCelular']
         contrasena = request.form['txtPassword']
+
+        nom_sitio = request.form['nom_sitio']
+        categoria_sitio = request.form['categoria_sitio']
+        sector = request.form['sector']
+
+        sentencia_contar = f"SELECT COUNT(id) AS total FROM sitios"
+        cursor.execute(sentencia_contar)
+        resultado = cursor.fetchall()
+        conexion.commit()
+
+        string = nom_sitio
+
+        cod_p1 = string[0:2]
+
+        string = categoria_sitio
+
+        cod_p2 =  string[0:2]
+
+        
 
         cifrada = hashlib.sha512(contrasena.encode("utf-8")).hexdigest()
 
@@ -271,7 +288,6 @@ def agregarTurista():
     apellido = request.form['txtApellido']
     cedula = request.form['txtCedula']
     correo = request.form['txtCorreo']
-    foto = request.files['foto']
     celular = request.form['txtCelular']
     contrasena = request.form['txtPassword']
 
@@ -281,8 +297,6 @@ def agregarTurista():
 
     estado = 'activo'
 
-    if not losTuristas.buscarTuristas(correo, contrasena):
-        losTuristas.agregarTurista([nombre, apellido, cedula, correo, foto, celular, rol, cifrada, estado])
 
 
 

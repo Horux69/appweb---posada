@@ -48,14 +48,12 @@
                             <td>{{ resul[1] }}</td>
                             <td>{{ resul[2] }}</td>
                             <td>{{ resul[3] }}</td>
-                            <td>
-                                <form action="" method="post">
-
-                                    <input type="hidden" name="txtID" id="txtID" value="{{resul[0]}}">
-                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                                </form>
-                            </td>
+                            {% if session["rol"] == 'su' or session["rol"] == 'ad' or session["rol"] == 'op'%}
+                            <td><a class="btn btn-warning" href="/admin/categorias_desactivar/{{resul[0]}}">Desactivar</a></td>
+                            {% endif %}
+                            {% if session["rol"] == 'su' or session["rol"] == 'ad'%}
+                            <td><a class="btn btn-danger" href="/admin/eliminarCategorias/{{resul[0]}}">Eliminar</a></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
 
